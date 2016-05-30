@@ -1,5 +1,5 @@
 ## Note: The file format might change in any way.
-## This github project is a just test bed for demonstrating how spatial gene could be stored together with some microscope photos.
+## This experimental github project is a just test bed for demonstrating how spatial gene data could be stored together with some microscope photos.
 
 
 Design goal:
