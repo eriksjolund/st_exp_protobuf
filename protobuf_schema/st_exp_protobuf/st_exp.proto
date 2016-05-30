@@ -6,7 +6,7 @@ import public "tiled_image.proto";
 
 
 // Keep the typedefs in sync with the typedefs in
-// dzi_helper/include/dzi_helper/dzi_types.h
+
 // feature_datamodel/include/feature_datamodel/datamodel.h
 
 //using PixelDimensionsT = UInt32;

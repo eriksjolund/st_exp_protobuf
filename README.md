@@ -23,3 +23,17 @@ Two newer competitors, [capnproto](https://capnproto.org/) and [flatbuffers](htt
 - capnproto, although being very high quality software, is being labeled as beta software and the javascript project [capnp-js](https://github.com/capnp-js/serialization) has had no commits since  Feb 27 2015 (today's date is May 19 2016).
 
 - the javascript support for flatbuffers is not quite there yet. The javascript fuzz test fails as of May 19 2016. See [support for different programming languages](http://google.github.io/flatbuffers/flatbuffers_support.html).
+
+
+## Installation (on Ubuntu 16.04)
+
+    sudo apt-get install libyajl-dev libyajl2
+    sudo apt-get install cmake
+
+Download and install Qt5.6. 
+
+    mkdir /tmp/build
+    cd /tmp/build
+    /home/user/cmake-3.4.0-Linux-x86_64/bin/cmake "-DCMAKE_PREFIX_PATH=/home/user/Qt5.6.0/5.6/gcc_64" /path/to/st_exp_protobuf
+    make
+
