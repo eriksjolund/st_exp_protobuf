@@ -31,7 +31,7 @@ Two newer competitors, [capnproto](https://capnproto.org/) and [flatbuffers](htt
 ## Installation (on Ubuntu 16.04)
 
     sudo apt-get install libyajl-dev libyajl2
-    sudo apt-get install cmake
+    sudo apt-get install cmake ninja-build
 
 Download and install Qt5.7. 
 
