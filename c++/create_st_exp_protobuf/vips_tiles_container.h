@@ -21,30 +21,26 @@
 // SOFTWARE.
 // 
 
-#ifndef SERIALIZE_TO_ST_EXP_PROTOBUF_INCLUDE_SERIALIZE_TO_ST_EXP_PROTOBUF_SERIALIZE_TO_ST_EXP_PROTOBUF_H
-#define SERIALIZE_TO_ST_EXP_PROTOBUF_INCLUDE_SERIALIZE_TO_ST_EXP_PROTOBUF_SERIALIZE_TO_ST_EXP_PROTOBUF_H
-#ifndef PROTOBUF_GENES_SERIALIZE_H
-#define PROTOBUF_GENES_SERIALIZE_H
-
+#ifndef CRICKCONVERT_VIPS_TILES_CONTAINER_H
+#define CRICKCONVERT_VIPS_TILES_CONTAINER_H
+#include <vector>
 #include <string>
-#include <crick_reader_interface/crick_reader_interface.h>
-#include <tiles_interface/tiles_interface.h>
-#include <tiles_spec_interface/tiles_spec_interface.h>
+#include <memory>
 #include <common_typedefs/common_typedefs.h>
 
-namespace data_model {
-struct Everything;
-}
+#include <tiles_spec_interface/tiles_spec_interface.h>
+#include <tiles_interface/tiles_interface.h>
+#include <vips_tiles/vips_tiles.h>
+class VipsTilesContainer {
+public:
+  VipsTilesContainer(const std::vector<std::string> &image_paths,
+                     common_typedefs::pixel_dimensions_t tile_size,
+                     common_typedefs::pixel_dimensions_t overlap);
+  std::vector<TilesInterface *> get_tiles_vec();
+  std::vector<TilesSpecInterface *> get_tiles_spec_vec();
 
-void serialize_to_st_exp_protobuf(
-    const CrickReaderInterface *crick_reader_interface,
-    const std::vector<TilesSpecInterface *> &tiles_spec_iface_vec,
-    const std::vector<TilesInterface *> &tiles_iface_vec,
-    const std::string &filename, common_typedefs::pixel_dimensions_t tile_size,
-    common_typedefs::pixel_dimensions_t overlap,
-    float spot_circle_radius,
-    const std::vector<std::string> image_filepaths);
+private:
+  std::vector<std::unique_ptr<VipsTiles>> vips_tiles_vec_;
+};
 
-#endif
-
-#endif   // SERIALIZE_TO_ST_EXP_PROTOBUF_INCLUDE_SERIALIZE_TO_ST_EXP_PROTOBUF_SERIALIZE_TO_ST_EXP_PROTOBUF_H
+#endif   // CRICKCONVERT_VIPS_TILES_CONTAINER_H

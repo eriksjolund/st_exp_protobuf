@@ -68,6 +68,9 @@
 #include <fstream>
 #include <err.h>
 
+#include <QString>
+#include <QByteArray>
+#include <QDebug>
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
@@ -135,10 +138,17 @@ static int reformat_boolean(void * /* ctx */, int /* boolean */) {
 static int reformat_number(void *ctx, const char *s, size_t l) {
   auto context(getContext(ctx));
   assert(context->state != ParserContext::State::NONE);
-  unsigned long num = std::stoul(std::string(reinterpret_cast<const char *>(s), l));
-  assert(num >= 0);
+  //  unsigned long num = std::stoul(std::string(reinterpret_cast<const char *>(s), l));
+
   if (context->state == ParserContext::State::X_COORD ||
       context->state == ParserContext::State::Y_COORD) {
+
+    // std::stof() is dependent on the locale. When the locale
+    // expects a comma instead of a point the parsing would brake.
+    // To avoid this we use QString::toFloat();
+    QString str(QByteArray(reinterpret_cast<const char *>(s), l));
+    float num = str.toFloat();
+
     assert(std::numeric_limits<data_model::spot_coord_t>::max() >= num);
     if (context->state == ParserContext::State::X_COORD) {
       context->tmp_x = num;
@@ -150,6 +160,11 @@ static int reformat_number(void *ctx, const char *s, size_t l) {
     }
   }
   if (context->state == ParserContext::State::HITS) {
+
+  unsigned long num = std::stoul(std::string(reinterpret_cast<const char *>(s), l));
+  assert(num >= 0);
+
+
     assert(std::numeric_limits<data_model::hits_t>::max() >= num);
     context->tmp_hits = num;
     return true;
@@ -210,8 +225,12 @@ find_or_create_spot(const data_model::spot_coord_t &x_coord,
   } else {
     data_model::spot_id_t current_spot = it->second;
     if (spots[current_spot].barcode != barcode) {
-      throw std::runtime_error("json has already had this coordinate but then "
-                               "it was another barcode");
+
+     
+
+      QString error_msg = QString("json has already had this coordinate but then "
+				  "it was another barcode (x=%1,y=%2,current barcode=%3, previous barcode=%4").arg(x_coord).arg(y_coord).arg( QString::fromStdString(spots[current_spot].barcode)).arg( barcode.c_str());
+      throw std::runtime_error(error_msg.toStdString());
     }
     return current_spot;
   }

@@ -21,30 +21,15 @@
 // SOFTWARE.
 // 
 
-#ifndef SERIALIZE_TO_ST_EXP_PROTOBUF_INCLUDE_SERIALIZE_TO_ST_EXP_PROTOBUF_SERIALIZE_TO_ST_EXP_PROTOBUF_H
-#define SERIALIZE_TO_ST_EXP_PROTOBUF_INCLUDE_SERIALIZE_TO_ST_EXP_PROTOBUF_SERIALIZE_TO_ST_EXP_PROTOBUF_H
-#ifndef PROTOBUF_GENES_SERIALIZE_H
-#define PROTOBUF_GENES_SERIALIZE_H
+#ifndef PARSE_COUNT_MATRIX_INCLUDE_PARSE_COUNT_MATRIX_PARSE_COUNT_MATRIX_H
+#define PARSE_COUNT_MATRIX_INCLUDE_PARSE_COUNT_MATRIX_PARSE_COUNT_MATRIX_H
+
 
 #include <string>
-#include <crick_reader_interface/crick_reader_interface.h>
-#include <tiles_interface/tiles_interface.h>
-#include <tiles_spec_interface/tiles_spec_interface.h>
-#include <common_typedefs/common_typedefs.h>
 
 namespace data_model {
 struct Everything;
 }
+data_model::Everything parse_count_matrix(const std::string &filepath);
 
-void serialize_to_st_exp_protobuf(
-    const CrickReaderInterface *crick_reader_interface,
-    const std::vector<TilesSpecInterface *> &tiles_spec_iface_vec,
-    const std::vector<TilesInterface *> &tiles_iface_vec,
-    const std::string &filename, common_typedefs::pixel_dimensions_t tile_size,
-    common_typedefs::pixel_dimensions_t overlap,
-    float spot_circle_radius,
-    const std::vector<std::string> image_filepaths);
-
-#endif
-
-#endif   // SERIALIZE_TO_ST_EXP_PROTOBUF_INCLUDE_SERIALIZE_TO_ST_EXP_PROTOBUF_SERIALIZE_TO_ST_EXP_PROTOBUF_H
+#endif  // PARSE_COUNT_MATRIX_INCLUDE_PARSE_COUNT_MATRIX_PARSE_COUNT_MATRIX_H

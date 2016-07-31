@@ -1,6 +1,9 @@
 ## Note: The file format might change in any way.
 ## This experimental github project is a just test bed for demonstrating how spatial gene data could be stored together with some microscope photos.
 
+To try the file format out, first install this software and then create st_exp_protobuf files by downloading and converting [online research data](http://www.spatialtranscriptomicsresearch.org/datasets/). The shell script sh/download_and_convert_example_data.sh automates the download and conversion.
+
+st_exp_protobuf files can be viewed with a web viewer from [osd-spot-viewer](https://github.com/eriksjolund/osd-spot-viewer).
 
 Design goal:
 
@@ -30,10 +33,16 @@ Two newer competitors, [capnproto](https://capnproto.org/) and [flatbuffers](htt
     sudo apt-get install libyajl-dev libyajl2
     sudo apt-get install cmake
 
-Download and install Qt5.6. 
+Download and install Qt5.7. 
 
     mkdir /tmp/build
     cd /tmp/build
     /home/user/cmake-3.4.0-Linux-x86_64/bin/cmake "-DCMAKE_PREFIX_PATH=/home/user/Qt5.6.0/5.6/gcc_64" /path/to/st_exp_protobuf
     make
 
+or if you use Ninja as make-tool:
+
+    mkdir /tmp/build
+    cd /tmp/build
+    cmake -G Ninja "-DCMAKE_PREFIX_PATH=/home/user/Qt/5.7/gcc_64"  ~/st_exp_protobuf/
+    make

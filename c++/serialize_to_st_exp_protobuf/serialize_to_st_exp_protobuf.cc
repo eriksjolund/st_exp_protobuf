@@ -78,8 +78,8 @@ namespace {
 typedef std::vector<data_model::hits_t> SpotHit;
 
 void build_spots(const std::vector<data_model::Spot> &spots,
-                 const std::array<double, 9> &alignment_matrix, ::st_exp_proto::Spots &spots_pb) {
-
+                 const std::array<double, 9> &alignment_matrix, ::st_exp_proto::Spots &spots_pb, float spot_circle_radius) {
+  spots_pb.set_spotcircleradius(spot_circle_radius);
   for (auto &iter : spots) {
     auto spot_pb = spots_pb.add_spots();
     spot_pb->set_barcode(iter.barcode);
@@ -99,6 +99,7 @@ void build_spots(const std::vector<data_model::Spot> &spots,
 std::vector<char> readFileIntoCharVector(const std::string &filepath) {
   QFile file(filepath.c_str());
   if (!file.open(QIODevice::ReadOnly)) {
+    qDebug() << "filpath=" << filepath.c_str();
     throw std::runtime_error("Could not open file in the function readFileIntoCharVector");
   }
   QByteArray byte_array = file.readAll();
@@ -106,9 +107,9 @@ std::vector<char> readFileIntoCharVector(const std::string &filepath) {
 }
 
 std::vector<char> create_serialized_spots(const std::vector<data_model::Spot> &spots,
-                                          const std::array<double, 9> &alignment_matrix) {
+                                          const std::array<double, 9> &alignment_matrix, float spot_circle_radius) {
   ::st_exp_proto::Spots spots_pb;
-  build_spots(spots, alignment_matrix, spots_pb);
+  build_spots(spots, alignment_matrix, spots_pb, spot_circle_radius);
   return messageToCharVector(spots_pb);
 }
 void build_gene_names(const std::vector<std::string> &gene_names,
@@ -185,6 +186,8 @@ void buildTileConversion(::tiled_image_proto::TileConversion *tile_conversion,
     common_typedefs::TilesSpec tiles_spec(tiles_spec_iface_vec[image_nr]->tiles_spec());
     const auto num_tiles = numTiles(tiles_spec.whole_image_width(), tiles_spec.whole_image_height(),
                                     tiles_spec.tile_size());
+
+      qDebug() << "in serialize_to_st_exp_protobuf() a2";
     auto tiledimage = tile_conversion->add_tiledimages();
     assert(tiledimage);
     for (common_typedefs::tile_id_t index = 0; index < num_tiles; ++index) {
@@ -261,7 +264,10 @@ void serialize_to_st_exp_protobuf(const CrickReaderInterface *crick_reader_inter
                                   const std::vector<TilesInterface *> &tiles_iface_vec,
                                   const std::string &filepath,
                                   common_typedefs::pixel_dimensions_t tile_size,
-                                  common_typedefs::pixel_dimensions_t overlap) {
+                                  common_typedefs::pixel_dimensions_t overlap,
+				  float spot_circle_radius,
+                                  const std::vector<std::string> image_filepaths
+				  ) {
   assert(crick_reader_interface);
   assert(tiles_spec_iface_vec.size() == tiles_iface_vec.size());
 
@@ -282,7 +288,7 @@ void serialize_to_st_exp_protobuf(const CrickReaderInterface *crick_reader_inter
   auto physical_dimensions = common_data->mutable_physicaldimensions();
 
   append_file_region(common_data->mutable_spots(),
-                     create_serialized_spots(data_model_everything.spots, image_alignment_matrix),
+                     create_serialized_spots(data_model_everything.spots, image_alignment_matrix, spot_circle_radius),
                      after_header_data);
   append_file_region(common_data->mutable_genenames(),
                      create_gene_names(data_model_everything.gene_names), after_header_data);
@@ -295,17 +301,18 @@ void serialize_to_st_exp_protobuf(const CrickReaderInterface *crick_reader_inter
   }
   const std::array<float, 4> identity_matrix{1.0, 0.0, 0.0, 1.0};
   ParsedImageAlignment imagA = crick_reader_interface->parsedImageAlignment();
+
+  for (auto &image_filepath : image_filepaths) {
   buildPhoto(header_pb.add_images(), after_header_data, ::fullsize_image_proto::PhotoType::HE,
-             ::fullsize_image_proto::ImageFileFormat::JPEG, imagA.blue_image, identity_matrix);
-  buildPhoto(header_pb.add_images(), after_header_data, ::fullsize_image_proto::PhotoType::SPOTS,
-             ::fullsize_image_proto::ImageFileFormat::JPEG, imagA.red_image, identity_matrix);
+             ::fullsize_image_proto::ImageFileFormat::JPEG, image_filepath, identity_matrix);
+  }
+  ///  buildPhoto(header_pb.add_images(), after_header_data, ::fullsize_image_proto::PhotoType::SPOTS,
+  //        ::fullsize_image_proto::ImageFileFormat::JPEG, imagA.red_image, identity_matrix);
 
   buildTileConversion(header_pb.add_tileconversions(), after_header_data, tiles_spec_iface_vec,
                       tiles_iface_vec, tile_size, overlap);
-
   std::vector<char> header_as_vector_char = messageToCharVector(header_pb);
   assert(header_as_vector_char.size() > 0);
   after_header_data.setHeader(&header_as_vector_char[0], header_as_vector_char.size());
-
   after_header_data.write_result_file(filepath);
 }

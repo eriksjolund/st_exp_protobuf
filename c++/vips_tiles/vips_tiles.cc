@@ -89,7 +89,7 @@ public:
       : tiles_spec_(get_tiles_spec(image_path, tile_size, overlap)) {
     // TODO: Check if we need to set permissions explictly for this dir.
     // No other user should have access to the directory
-    dir_.setAutoRemove(true);
+    dir_.setAutoRemove(false);
     if (dir_.isValid()) {
       QString outpath = dir_.path() + QDir::separator() + "aaa";
       QStringList vips_arguments{
@@ -112,6 +112,7 @@ public:
   common_typedefs::TilesSpec tiles_spec() const { return tiles_spec_; }
 
   QByteArray tile(common_typedefs::tile_id_t tile_id) const {
+    //    qDebug() << "tiles_spec_.whole_image_width()=" << tiles_spec_.whole_image_width() <<  " tiles_spec_.whole_image_height()=" << tiles_spec_.whole_image_height();
     XYLevel xy_level = xyLevel(tile_id, tiles_spec_.whole_image_width(),
                                tiles_spec_.whole_image_height(), tiles_spec_.tile_size());
     QString outpath = dir_.path() + QDir::separator() + "aaa" + "_files" + QDir::separator() +

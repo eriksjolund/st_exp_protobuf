@@ -21,30 +21,29 @@
 // SOFTWARE.
 // 
 
-#ifndef SERIALIZE_TO_ST_EXP_PROTOBUF_INCLUDE_SERIALIZE_TO_ST_EXP_PROTOBUF_SERIALIZE_TO_ST_EXP_PROTOBUF_H
-#define SERIALIZE_TO_ST_EXP_PROTOBUF_INCLUDE_SERIALIZE_TO_ST_EXP_PROTOBUF_SERIALIZE_TO_ST_EXP_PROTOBUF_H
-#ifndef PROTOBUF_GENES_SERIALIZE_H
-#define PROTOBUF_GENES_SERIALIZE_H
+#ifndef CREATE_ST_EXP_PROTOBUF_PARSE_ARGS_H
+#define CREATE_ST_EXP_PROTOBUF_PARSE_ARGS_H
 
-#include <string>
-#include <crick_reader_interface/crick_reader_interface.h>
-#include <tiles_interface/tiles_interface.h>
-#include <tiles_spec_interface/tiles_spec_interface.h>
+#include <QtGlobal>
+#include <QCommandLineParser>
+
 #include <common_typedefs/common_typedefs.h>
 
-namespace data_model {
-struct Everything;
-}
+#include <dataset_reader/dataset_reader.h>
 
-void serialize_to_st_exp_protobuf(
-    const CrickReaderInterface *crick_reader_interface,
-    const std::vector<TilesSpecInterface *> &tiles_spec_iface_vec,
-    const std::vector<TilesInterface *> &tiles_iface_vec,
-    const std::string &filename, common_typedefs::pixel_dimensions_t tile_size,
-    common_typedefs::pixel_dimensions_t overlap,
-    float spot_circle_radius,
-    const std::vector<std::string> image_filepaths);
+enum class ParseResult { kExit, kContinue };
 
-#endif
+struct Options {
+  common_typedefs::pixel_dimensions_t tile_size = 510;
+  common_typedefs::pixel_dimensions_t overlap = 1;
+  float spot_circle_radius = 0;
+  std::string output_filepath;
+  std::string photo_filepath;
+  std::string hitcount_filepath;
+  std::string transformation_txt_filepath;
+  HitCountFileFormat hitcount_fileformat = HitCountFileFormat::kCountMatrixTsv;
+};
 
-#endif   // SERIALIZE_TO_ST_EXP_PROTOBUF_INCLUDE_SERIALIZE_TO_ST_EXP_PROTOBUF_SERIALIZE_TO_ST_EXP_PROTOBUF_H
+ParseResult parseArgs(int argc, char *argv[], Options *options);
+
+#endif   // CREATE_ST_EXP_PROTOBUF_PARSE_ARGS_H

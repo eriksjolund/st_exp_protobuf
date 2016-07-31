@@ -36,8 +36,8 @@ QPointF translate_point(const std::array<double, 9> &alignment_matrix,
   for (const auto &a : alignment_matrix) {
     qreal_vec.push_back(static_cast<qreal>(a));
   }
-  QTransform transform(qreal_vec[0], qreal_vec[3], qreal_vec[6], qreal_vec[1], qreal_vec[4],
-                       qreal_vec[7], qreal_vec[2], qreal_vec[5], qreal_vec[8]);
+  QTransform transform(qreal_vec[0], qreal_vec[1], qreal_vec[2], qreal_vec[3], qreal_vec[4],
+                       qreal_vec[5], qreal_vec[6], qreal_vec[7], qreal_vec[8]);
   {
     // Bug reported 13 March 2016
     // https://bugreports.qt.io/browse/QTBUG-51837

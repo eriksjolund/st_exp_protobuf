@@ -1,6 +1,7 @@
-Parts of the file:
+Parts of the files:
 c++/parse_feature_json/json_parse.cc
-has its origins from the source code file json_reformat.c
+~/st_exp_protobuf/c++/parse_count_matrix/parse_count_matrix.cc
+have their origins from the source code file json_reformat.c
 that was found in the Yajl software library. It can be downloaded from
 
 https://github.com/lloyd/yajl/blob/2.1.0/reformatter/json_reformat.c

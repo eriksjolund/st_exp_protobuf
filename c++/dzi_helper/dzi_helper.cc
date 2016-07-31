@@ -73,8 +73,8 @@ tileId(common_typedefs::tile_coord_t x_coord, common_typedefs::tile_coord_t y_co
   common_typedefs::level_t num_levels = numLevels(width, height);
   common_typedefs::pixel_dimensions_t scaled_tile_size =
       scaledTileSize(num_levels, level, tile_size);
-  auto num_rows = divIntegerCeiling(height, scaled_tile_size);
-  result += num_rows * y_coord + x_coord;
+  auto num_columns = divIntegerCeiling(width, scaled_tile_size);
+  result += num_columns * y_coord + x_coord;
   return result;
 }
 
@@ -99,10 +99,10 @@ XYLevel xyLevel(common_typedefs::tile_id_t tile_id, common_typedefs::pixel_dimen
   }
   common_typedefs::pixel_dimensions_t scaled_tile_size =
       scaledTileSize(num_levels, level, tile_size);
-  auto num_rows = divIntegerCeiling(height, scaled_tile_size);
+  auto num_columns = divIntegerCeiling(width, scaled_tile_size);
   auto tiles_current_level = tile_id - tile_count;
-  common_typedefs::tile_coord_t x = tiles_current_level % num_rows;
-  common_typedefs::tile_coord_t y = tiles_current_level / num_rows;
+  common_typedefs::tile_coord_t x = tiles_current_level % num_columns;
+  common_typedefs::tile_coord_t y = tiles_current_level / num_columns;
   return XYLevel{x, y, level};
 }
 

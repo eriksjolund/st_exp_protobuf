@@ -21,30 +21,30 @@
 // SOFTWARE.
 // 
 
-#ifndef SERIALIZE_TO_ST_EXP_PROTOBUF_INCLUDE_SERIALIZE_TO_ST_EXP_PROTOBUF_SERIALIZE_TO_ST_EXP_PROTOBUF_H
-#define SERIALIZE_TO_ST_EXP_PROTOBUF_INCLUDE_SERIALIZE_TO_ST_EXP_PROTOBUF_SERIALIZE_TO_ST_EXP_PROTOBUF_H
-#ifndef PROTOBUF_GENES_SERIALIZE_H
-#define PROTOBUF_GENES_SERIALIZE_H
-
+#ifndef DATASET_READER_INCLUDE_DATASET_READER_DATASET_READER_H
+#define DATASET_READER_INCLUDE_DATASET_READER_DATASET_READER_H
+#include <memory>
 #include <string>
+#include <array>
+
+#include <feature_datamodel/datamodel.h>
 #include <crick_reader_interface/crick_reader_interface.h>
-#include <tiles_interface/tiles_interface.h>
-#include <tiles_spec_interface/tiles_spec_interface.h>
-#include <common_typedefs/common_typedefs.h>
 
-namespace data_model {
-struct Everything;
-}
 
-void serialize_to_st_exp_protobuf(
-    const CrickReaderInterface *crick_reader_interface,
-    const std::vector<TilesSpecInterface *> &tiles_spec_iface_vec,
-    const std::vector<TilesInterface *> &tiles_iface_vec,
-    const std::string &filename, common_typedefs::pixel_dimensions_t tile_size,
-    common_typedefs::pixel_dimensions_t overlap,
-    float spot_circle_radius,
-    const std::vector<std::string> image_filepaths);
+enum class HitCountFileFormat { kCountMatrixTsv, kJson };
 
-#endif
+class DatasetReader : public CrickReaderInterface {
+ public:
+  DatasetReader(const std::string &transformation_txt_filepath,
+		const std::string &hitcount_filepath,
+		const HitCountFileFormat &hitcount_fileformat);
+  ParsedImageAlignment parsedImageAlignment() const override;
+  data_model::Everything parsedFeatures() const override;
+  ~DatasetReader();
 
-#endif   // SERIALIZE_TO_ST_EXP_PROTOBUF_INCLUDE_SERIALIZE_TO_ST_EXP_PROTOBUF_SERIALIZE_TO_ST_EXP_PROTOBUF_H
+ private:
+  class impl;
+  std::unique_ptr<impl> pimpl_;
+};
+
+#endif   // DATASET_READER_INCLUDE_DATASET_READER_DATASET_READER_H
