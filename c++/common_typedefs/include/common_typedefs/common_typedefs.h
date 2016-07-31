@@ -31,7 +31,27 @@
 namespace common_typedefs {
 
 typedef uint16_t gene_id_t;
-typedef uint16_t spot_coord_t;
+
+
+// The type spot_coord_t was first meant to be used as a logical grid
+// coordinate.  A natural choice for this would be to use
+// integers (for instance uint16_t).
+//
+// The file formats of the datasets provided under these URLs
+// http://www.spatialtranscriptomicsresearch.org/wp-content/uploads/2016/07/Rep1_MOB_count_matrix-1.tsv
+// http://www.spatialtranscriptomicsresearch.org/wp-content/uploads/2016/07/Rep1_MOB_aligned.json_.gz
+//
+// do not contain any information about logical grid coordinates but instead
+// provide the image pixel coordinates of the spots.
+//
+// To be able to parse those file formats without changing to much
+// of the code we let spot_coord_t be a float.
+
+
+
+ typedef float spot_coord_t;
+
+
 
 typedef uint32_t spot_id_t;
 typedef uint32_t hits_t;
