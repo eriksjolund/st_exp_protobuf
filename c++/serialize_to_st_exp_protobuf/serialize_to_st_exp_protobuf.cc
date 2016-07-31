@@ -90,9 +90,10 @@ void build_spots(const std::vector<data_model::Spot> &spots,
     // QPointF (Qt5Gui). Rewrite translate_point.
     QPointF spot_in_physical_coordinates =
         translate_point(alignment_matrix, iter.xcoord_grid, iter.ycoord_grid);
-    spot_pb->set_xcoordphyscial(
+    qDebug() << "QPointF=" << spot_in_physical_coordinates;
+    spot_pb->set_xcoordphysical(
         static_cast<common_typedefs::physical_dimensions_t>(spot_in_physical_coordinates.x()));
-    spot_pb->set_ycoordphyscial(
+    spot_pb->set_ycoordphysical(
         static_cast<common_typedefs::physical_dimensions_t>(spot_in_physical_coordinates.y()));
   };
 }
